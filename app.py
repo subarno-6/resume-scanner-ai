@@ -1,11 +1,13 @@
 import streamlit as st
 from resume_parser import extract_text_from_pdf
 from utils import create_pdf
-import openai, os
+import os
 from dotenv import load_dotenv
+from openai import OpenAI
 
+# Load API key
 load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY")
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 st.set_page_config(page_title="AI Resume Scanner", layout="centered")
 st.title("📄 AI Resume Scanner & Matcher")
@@ -33,7 +35,7 @@ Resume:
 Job Description:
 {job_desc}"""
 
-            response = openai.ChatCompletion.create(
+            response = client.chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=[{"role": "user", "content": prompt}],
                 temperature=0.5
